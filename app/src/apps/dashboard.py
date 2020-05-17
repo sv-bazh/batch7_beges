@@ -45,15 +45,11 @@ layout = html.Div(
             [
                 dbc.Col(
                     [
-                        dbc.Button(
-                            "Exporter les données",
-                            color="primary",
-                            className="mr-1",
-                            block=True,
-                            id="export-data-button",
+                        html.A(
+                            dbc.Button("Exporter les données", color="primary", className="mr-1", block=True,),
+                            id="export-data-link",
                             href="",
                         ),
-                        html.A("Exporter", id="export-data-link", href=""),
                     ],
                     width={"size": 2, "offset": 8},
                 ),
@@ -78,12 +74,7 @@ layout = html.Div(
 )
 
 
-@app.callback(Output("export-data-link", "href"), [Input("dashboard-selected-entity", "children")])
-def update_link(value):
-    return "/data/urlToDownload?value={}".format(value)
-
-
-@app.server.route("/data/urlToDownload")
+@app.server.route("/data/exportRaw")
 def download_excel():
     value = flask.request.args.get("value")
     de = utils.DataExport(value)
@@ -97,6 +88,11 @@ def download_excel():
         as_attachment=True,
         cache_timeout=0,
     )  # TODO: Remove cache timeout
+
+
+@app.callback([Output("export-data-button", "href")], [Input("dashboard-selected-entity", "children")])
+def update_link(value):
+    return ["/data/exportRaw?value={}".format(value)]
 
 
 @app.callback(Output("dashboard-selected-entity", "children"), [Input("url", "pathname")])
