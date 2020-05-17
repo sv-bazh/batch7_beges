@@ -45,8 +45,15 @@ layout = html.Div(
             [
                 dbc.Col(
                     [
-                        dbc.Button("Exporter les données", color="primary", className="mr-1", block=True),
-                        html.A("Exporter", id="my-link", href=""),
+                        dbc.Button(
+                            "Exporter les données",
+                            color="primary",
+                            className="mr-1",
+                            block=True,
+                            id="export-data-button",
+                            href="",
+                        ),
+                        html.A("Exporter", id="export-data-link", href=""),
                     ],
                     width={"size": 2, "offset": 8},
                 ),
@@ -71,7 +78,7 @@ layout = html.Div(
 )
 
 
-@app.callback(Output("my-link", "href"), [Input("dashboard-selected-entity", "children")])
+@app.callback(Output("export-data-link", "href"), [Input("dashboard-selected-entity", "children")])
 def update_link(value):
     return "/data/urlToDownload?value={}".format(value)
 
